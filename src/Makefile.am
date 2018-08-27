@@ -1,3 +1,3 @@
-bin_PROGRAMS=a.out
-a_out_SOURCES=Astaire.cpp
+bin_PROGRAMS=astaire
+astaire_SOURCES=Astaire.cpp
 
