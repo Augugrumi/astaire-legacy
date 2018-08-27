@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(Astaire, 1.0)
+AC_INIT(Astaire, 1.0, https://github.com/Augugrumi/Astaire/issues)
 AC_LANG(C++)
 AC_CANONICAL_SYSTEM
 AC_PROG_CXX
