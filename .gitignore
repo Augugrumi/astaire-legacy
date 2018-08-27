@@ -46,5 +46,4 @@ src/.deps/
 src/a.out
 src/astaire
 *.o
-src/Makefile
 Makefile
