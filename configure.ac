@@ -8,6 +8,7 @@ AC_PROG_CXX
 AM_INIT_AUTOMAKE()
 AC_CONFIG_FILES(Makefile src/Makefile)
 
+dnl Checking libviface installation
 LDFLAGS="$LDFLAGS -lviface"
 AC_LINK_IFELSE(
   [
