@@ -14,15 +14,16 @@ AX_CXX_COMPILE_STDCXX(11, [noext], [mandatory])
 AC_CONFIG_HEADERS([src/config.h])
 
 dnl Checking libviface installation
-AC_CHECK_LIB(viface, send, [VIFACE_LIBS+=-lviface], [AC_MSG_ERROR([send was not found in libviface])])
+AC_CHECK_LIB(viface, send, [astaire_LIBS+=" -lviface"], [AC_MSG_ERROR([send was not found in libviface])])
 
-AC_CHECK_LIB(pthread, pthread_create, [PTHREAD_LIBS+=-lpthread], [AC_MSG_ERROR([pthread_create was not found in libpthread])])
+AC_CHECK_LIB(pthread, pthread_create, [astaire_LIBS+=" -lpthread"], [AC_MSG_ERROR([pthread_create was not found in libpthread])])
 
-AC_CHECK_LIB(tins, main, [TINS_LIBS+=-ltins], [AC_MSG_ERROR([main was not found in libtins])])
+AC_CHECK_LIB(tins, main, [astaire_LIBS+=" -ltins"], [AC_MSG_ERROR([main was not found in libtins])])
 
-AC_CHECK_LIB(pcap, pcap_loop, [PCAP_LIBS+=-lpcap], [AC_MSG_ERROR([pcap_loop was not found in libpcap])])
+AC_CHECK_LIB(pcap, pcap_loop, [astaire_LIBS+=" -lpcap"], [AC_MSG_ERROR([pcap_loop was not found in libpcap])])
 
-LDFLAGS="$LDFLAGS $VIFACE_LIBS $PTHREAD_LIBS $TINS_LIBS"
+dnl Adding the library to link to the Makefile
+AC_SUBST(astaire_LIBS, $astaire_LIBS)
 
 dnl Checking boost dependencies
 AX_BOOST_BASE([1.58],, [AC_MSG_ERROR([astaire needs Boost, but it was not found in your system])])
