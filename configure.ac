@@ -20,6 +20,8 @@ AC_CHECK_LIB(pthread, pthread_create, [PTHREAD_LIBS+=-lpthread], [AC_MSG_ERROR([
 
 AC_CHECK_LIB(tins, main, [TINS_LIBS+=-ltins], [AC_MSG_ERROR([main was not found in libtins])])
 
+AC_CHECK_LIB(pcap, pcap_loop, [PCAP_LIBS+=-lpcap], [AC_MSG_ERROR([pcap_loop was not found in libpcap])])
+
 LDFLAGS="$LDFLAGS $VIFACE_LIBS $PTHREAD_LIBS $TINS_LIBS"
 
 dnl Checking boost dependencies
