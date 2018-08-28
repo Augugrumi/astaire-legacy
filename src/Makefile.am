@@ -1,3 +1,2 @@
 bin_PROGRAMS=astaire
 astaire_SOURCES=Astaire.cpp
-
