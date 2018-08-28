@@ -4,7 +4,7 @@ Astaire
 # How to build
 First of all, generate all the autotools script with this command:
 ```bash
-aclocal && autoconf && automake --add-missing
+aclocal -I m4 --install && autoconf && automake --add-missing
 ```
 
 At this point, the compilation is simply:
