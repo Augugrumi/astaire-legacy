@@ -11,7 +11,7 @@ AC_CONFIG_MACRO_DIR([m4])
 
 AX_CXX_COMPILE_STDCXX(11, [noext], [mandatory])
 
-#AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_HEADERS([src/config.h])
 
 dnl Checking libviface installation
 AC_CHECK_LIB(viface, send, [VIFACE_LIBS+=-lviface], [AC_MSG_ERROR([send was not found in libviface])])

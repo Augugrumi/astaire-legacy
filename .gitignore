@@ -47,3 +47,6 @@ src/a.out
 src/astaire
 *.o
 Makefile
+src/config.h*
+src/stamp-h1
+.*.*
