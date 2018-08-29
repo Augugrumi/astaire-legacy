@@ -19,3 +19,4 @@ ConnectionManager::~ConnectionManager() {
 }
 
 } /* namespace connectionmanager */
+

@@ -5,7 +5,7 @@ AC_INIT(Astaire, 1.0, https://github.com/Augugrumi/Astaire/issues)
 AC_LANG(C++)
 AC_CANONICAL_SYSTEM
 AC_PROG_CXX
-AM_INIT_AUTOMAKE()
+AM_INIT_AUTOMAKE([subdir-objects])
 AC_CONFIG_FILES(Makefile src/Makefile)
 AC_CONFIG_MACRO_DIR([m4])
 
