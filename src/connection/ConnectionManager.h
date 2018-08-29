@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <boost/shared_ptr.hpp>
+#include <boost/thread.hpp>
 #include <viface/viface.hpp>
 
 #include "handler/Handler.h"
@@ -25,15 +27,17 @@ namespace connectionmanager {
 class ConnectionManager {
 
 private:
-	Handler handler;
-	viface::VIface iface;
+	boost::shared_ptr<handler::Handler> handler;
+	boost::shared_ptr< viface::VIface > iface;
 	void receive();
+	void send_method(std::vector<uint8_t> raw_packet);
+	void receive_method();
 
 public:
 	ConnectionManager();
 	void setupInterface(std::string interface_name, std::string ip);
 	void send(std::vector<uint8_t> raw_packet);
-	void setMessageHandler(Handler& handler);
+	void setMessageHandler(handler::Handler* handler);
 	void start();
 	virtual ~ConnectionManager();
 };

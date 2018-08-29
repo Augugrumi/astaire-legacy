@@ -8,7 +8,7 @@
 #ifndef HANDLER_HANDLER_H_
 #define HANDLER_HANDLER_H_
 
-namespace connectionmanager {
+namespace handler {
 
 /*
  * Class that handle message received

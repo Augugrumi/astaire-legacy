@@ -7,7 +7,7 @@
 
 #include "Handler.h"
 
-namespace connectionmanager {
+namespace handler {
 
 Handler::Handler() {
 	// TODO Auto-generated constructor stub
