@@ -17,6 +17,9 @@
 #include "vector"
 #include "viface/viface.hpp"
 #include "tins/tins.h"
+#include "config.h"
+
+#include <boost/log/trivial.hpp>
 
 using namespace std;
 
@@ -94,6 +97,8 @@ void send_wkr(viface::VIface* iface, vector<uint8_t> pkt)
  */
 int main(int argc, const char* argv[])
 {
+
+	BOOST_LOG_TRIVIAL(info) << "Spinning up " << PACKAGE_STRING << "...";
     cout << "Starting threads example ..." << endl;
 
     try {

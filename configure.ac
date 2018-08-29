@@ -22,13 +22,18 @@ AC_CHECK_LIB(tins, main, [astaire_LIBS+=" -ltins"], [AC_MSG_ERROR([main was not 
 
 AC_CHECK_LIB(pcap, pcap_loop, [astaire_LIBS+=" -lpcap"], [AC_MSG_ERROR([pcap_loop was not found in libpcap])])
 
-dnl Adding the library to link to the Makefile
-AC_SUBST(astaire_LIBS, $astaire_LIBS)
-
 dnl Checking boost dependencies
-AX_BOOST_BASE([1.58],, [AC_MSG_ERROR([astaire needs Boost, but it was not found in your system])])
+AX_BOOST_BASE([1.58],[astaire_ADDITIONALFLAGS="-DBOOST_LOG_DYN_LINK"], [AC_MSG_ERROR([astaire needs Boost, but it was not found in your system])])
 AX_BOOST_THREAD
 AX_BOOST_LOG
+
+# Add additional flags
+astaire_LIBS+=" -lboost_log"
+astaire_LIBS+=" -lboost_thread"
+
+dnl Adding the library to link to the Makefile
+AC_SUBST(astaire_LIBS, $astaire_LIBS)
+AC_SUBST(astaire_CUSTOMFLAGS, $astaire_ADDITIONALFLAGS)
 
 AC_OUTPUT
 

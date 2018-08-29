@@ -4,3 +4,4 @@ astaire_SOURCES=Astaire.cpp \
                 connection/Packet.cpp \
                 handler/Handler.cpp
 astaire_LDADD=$(astaire_LIBS)
+astaire_CXXFLAGS=$(astaire_CUSTOMFLAGS)
