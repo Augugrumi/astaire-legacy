@@ -29,14 +29,13 @@ class ConnectionManager {
 private:
 	boost::shared_ptr<handler::Handler> handler;
 	boost::shared_ptr< viface::VIface > iface;
-	void receive();
-	void send_method(std::vector<uint8_t> raw_packet);
-	void receive_method();
+	void receive() const;
+	void receive_method() const;
 
 public:
 	ConnectionManager();
 	void setupInterface(std::string interface_name, std::string ip);
-	void send(std::vector<uint8_t> raw_packet);
+	void send(std::vector<uint8_t> &raw_packet) const;
 	void setMessageHandler(handler::Handler* handler);
 	void start();
 	virtual ~ConnectionManager();

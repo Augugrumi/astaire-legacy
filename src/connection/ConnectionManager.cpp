@@ -31,21 +31,20 @@ void ConnectionManager::setMessageHandler(handler::Handler* handler){
 	this->handler = boost::shared_ptr<handler::Handler>(handler);
 }
 
-void ConnectionManager::send_method(std::vector<uint8_t> raw_packet) {
+void ConnectionManager::send(std::vector<uint8_t> &raw_packet) const {
+	auto lambda = [this](std::vector<uint8_t> &raw_packet) {
+		this->iface->send(raw_packet);
+	};
+
+	boost::thread sender_thread(lambda, raw_packet);
+	sender_thread.detach();
+}
+
+void ConnectionManager::receive_method() const {
 	// method to add eventual logging
-	iface->send(raw_packet);
 }
 
-void ConnectionManager::send(std::vector<uint8_t> raw_packet) {
-	boost::thread t{send_method, raw_packet};
-	t.detach();
-}
-
-void ConnectionManager::receive_method() {
-	// method to add eventual logging
-}
-
-void ConnectionManager::receive(){
+void ConnectionManager::receive() const {
 
 }
 
