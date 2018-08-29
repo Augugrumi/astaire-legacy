@@ -1,5 +1,5 @@
 language: cpp
-sudo: false
+sudo: required
 compiler:
   - gcc
 
@@ -14,5 +14,5 @@ addons:
       - libtins-dev
 
 before_script:
-  - cd /tmp/ && wget https://github.com/Augugrumi/libviface/releases/download/v1.1.1/libviface_1.0.0.deb -O libviface_1.0.0.deb && dpkg -i libviface_1.0.0.deb && cd -
+  - cd /tmp/ && wget https://github.com/Augugrumi/libviface/releases/download/v1.1.1/libviface_1.0.0.deb -O libviface_1.0.0.deb && sudo dpkg -i libviface_1.0.0.deb && cd -
   - aclocal -I m4 --install && autoconf && automake --add-missing
