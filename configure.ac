@@ -30,6 +30,7 @@ AX_BOOST_LOG
 # Add additional flags
 astaire_LIBS+=" -lboost_log"
 astaire_LIBS+=" -lboost_thread"
+astaire_LIBS+=" -lboost_system"
 
 dnl Adding the library to link to the Makefile
 AC_SUBST(astaire_LIBS, $astaire_LIBS)
