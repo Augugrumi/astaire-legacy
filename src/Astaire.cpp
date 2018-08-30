@@ -101,7 +101,7 @@ int main(int argc, const char* argv[])
 
 	BOOST_LOG_TRIVIAL(info) << "Spinning up " << PACKAGE_STRING << "...";
 
-#if BOOST_VERSION > 106600
+#if BOOST_VERSION >= 106600
 	BOOST_LOG_TRIVIAL(info) << "Using a version of boost newer then 1.66!";
 #endif
 

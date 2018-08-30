@@ -11,7 +11,7 @@ namespace connectionmanager {
 
 // TODO think better initializer
 ConnectionManager::ConnectionManager() : iface(), handler() {
-#if BOOST_VERSION > 106600
+#if BOOST_VERSION >= 106600
 	this->t_pool = boost::shared_ptr<boost::asio::thread_pool>(
 			new boost::asio::thread_pool(std::thread::hardware_concurrency()
 	));
@@ -45,7 +45,7 @@ void ConnectionManager::send(std::vector<uint8_t> &raw_packet) const {
 		this->iface->send(raw_packet);
 	};
 
-#if BOOST_VERSION > 106600
+#if BOOST_VERSION >= 106600
 	boost::asio::post(*t_pool, boost::bind(lambda, raw_packet));
 
 #else

@@ -34,7 +34,7 @@ class ConnectionManager {
 private:
 	boost::shared_ptr<handler::Handler> handler;
 	boost::shared_ptr<viface::VIface> iface;
-#if BOOST_VERSION > 106600
+#if BOOST_VERSION >= 106600
 	boost::shared_ptr<boost::asio::thread_pool> t_pool;
 #endif
 	void receive() const;
