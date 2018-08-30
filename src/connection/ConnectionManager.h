@@ -15,6 +15,10 @@
 #include <boost/thread.hpp>
 #include <viface/viface.hpp>
 #include <boost/log/trivial.hpp>
+#if BOOST_VERSION > 106600
+#include <boost/asio/thread_pool.hpp>
+#include <boost/asio.hpp>
+#endif
 
 #include "handler/Handler.h"
 
@@ -29,7 +33,10 @@ class ConnectionManager {
 
 private:
 	boost::shared_ptr<handler::Handler> handler;
-	boost::shared_ptr< viface::VIface > iface;
+	boost::shared_ptr<viface::VIface> iface;
+#if BOOST_VERSION > 106600
+	boost::shared_ptr<boost::asio::thread_pool> t_pool;
+#endif
 	void receive() const;
 
 public:

@@ -10,7 +10,13 @@
 namespace connectionmanager {
 
 // TODO think better initializer
-ConnectionManager::ConnectionManager() : iface(), handler() {}
+ConnectionManager::ConnectionManager() : iface(), handler() {
+#if BOOST_VERSION > 106600
+	this->t_pool = boost::shared_ptr<boost::asio::thread_pool>(
+			new boost::asio::thread_pool(std::thread::hardware_concurrency()
+	));
+#endif
+}
 
 ConnectionManager::~ConnectionManager() {
 	// TODO Auto-generated destructor stub
@@ -34,13 +40,19 @@ void ConnectionManager::setMessageHandler(handler::Handler* handler){
 }
 
 void ConnectionManager::send(std::vector<uint8_t> &raw_packet) const {
-	BOOST_LOG_TRIVIAL(trace) << "Sending raw packet...";
+
 	auto lambda = [this](std::vector<uint8_t> &raw_packet) {
 		this->iface->send(raw_packet);
 	};
 
-	boost::thread sender_thread(lambda, raw_packet);
-	sender_thread.detach();
+#if BOOST_VERSION > 106600
+	boost::asio::post(*t_pool, boost::bind(lambda, raw_packet));
+
+#else
+	BOOST_LOG_TRIVIAL(trace) << "Sending raw packet...";
+		boost::thread sender_thread(lambda, raw_packet);
+		sender_thread.detach();
+#endif
 }
 
 void ConnectionManager::receive() const {
