@@ -2,17 +2,12 @@ language: cpp
 sudo: required
 compiler:
   - gcc
-
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-7
-      - libboost-all-dev
-      - libpcap-dev
-      - libtins-dev
-
-before_script:
-  - cd /tmp/ && wget https://github.com/Augugrumi/libviface/releases/download/v1.1.1/libviface_1.0.0.deb -O libviface_1.0.0.deb && sudo dpkg -i libviface_1.0.0.deb && cd -
-  - aclocal -I m4 --install && autoconf && automake --add-missing
+services:
+  - docker
+# Distro versions
+env:
+  - BUILD_TARGET=u16.04 # Ubuntu16.04
+  - BUILD_TARGET=u18.04 # Ubuntu18.04
+  - BUILD_TARGET=arch # Latest Arch Linux
+script:
+  - cd ci/docker/; docker build -t augugrumi/u$BUILD_TARGET -f Dockerfile.$BUILD_TARGET
