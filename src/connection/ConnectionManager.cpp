@@ -50,8 +50,8 @@ void ConnectionManager::send(std::vector<uint8_t> &raw_packet) const {
 
 #else
 	BOOST_LOG_TRIVIAL(trace) << "Sending raw packet...";
-		boost::thread sender_thread(lambda, raw_packet);
-		sender_thread.detach();
+	boost::thread sender_thread(lambda, raw_packet);
+	sender_thread.detach();
 #endif
 }
 
