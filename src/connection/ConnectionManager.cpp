@@ -40,12 +40,17 @@ void ConnectionManager::send(std::vector<uint8_t> &raw_packet) const {
 	sender_thread.detach();
 }
 
-void ConnectionManager::receive_method() const {
-	// method to add eventual logging
-}
-
 void ConnectionManager::receive() const {
 
+	std::vector<uint8_t> result = this->iface->receive();
+	boost::shared_ptr<std::vector<uint8_t>> packet_received = boost::shared_ptr<std::vector<uint8_t>>(&result);
+
+	auto lambda = [this](boost::shared_ptr<std::vector<uint8_t>> packet_received) {
+		this->handler->handleMessage(packet_received);
+	};
+
+	boost::thread receive_thread(lambda, packet_received);
+	receive_thread.detach();
 }
 
 } /* namespace connectionmanager */

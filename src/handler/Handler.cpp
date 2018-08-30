@@ -18,4 +18,9 @@ Handler::~Handler() {
 	// TODO Auto-generated destructor stub
 }
 
+void Handler::handleMessage(boost::shared_ptr<std::vector<uint8_t>> packet) const {
+	// TODO Handle received packet
+}
+
+
 } /* namespace connectionmanager */

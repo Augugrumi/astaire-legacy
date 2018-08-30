@@ -30,7 +30,6 @@ private:
 	boost::shared_ptr<handler::Handler> handler;
 	boost::shared_ptr< viface::VIface > iface;
 	void receive() const;
-	void receive_method() const;
 
 public:
 	ConnectionManager();
