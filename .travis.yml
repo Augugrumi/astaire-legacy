@@ -8,6 +8,6 @@ services:
 env:
   - BUILD_TARGET=u16.04 # Ubuntu16.04
   - BUILD_TARGET=u18.04 # Ubuntu18.04
-  - BUILD_TARGET=arch # Latest Arch Linux
+#  - BUILD_TARGET=arch # Latest Arch Linux
 script:
   - cd ci/docker/; docker build -t augugrumi/u$BUILD_TARGET -f Dockerfile.$BUILD_TARGET

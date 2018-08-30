@@ -1,1 +1,24 @@
+FROM ubuntu:18.04
+
+LABEL maintainer="poloniodavide@gmail.com"
+
+RUN apt-get update && apt-get install \
+    build-essential \
+    wget \
+    libboost-all-dev \
+    libpcap-dev \
+    libtins-dev && \
+    wget https://github.com/Augugrumi/libviface/releases/download/v1.1.1/libviface_1.0.0.deb && \
+    dpkg -i libviface_1.0.0.deb
+
+RUN mkdir -p /build/
+WORKDIR /build/
+
+COPY ../../ /build/
+
+RUN aclocal -I m4 --install && \
+    autoconf && \
+    automake --add-missing && \
+    ./configure && \
+    make
  
