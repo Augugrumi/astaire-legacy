@@ -14,6 +14,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 #include <viface/viface.hpp>
+#include <boost/log/trivial.hpp>
 
 #include "handler/Handler.h"
 
