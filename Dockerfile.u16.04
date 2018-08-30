@@ -3,6 +3,9 @@ FROM ubuntu:16.04
 LABEL maintainer="poloniodavide@gmail.com"
 
 RUN apt-get update && apt-get install -y \
+    autotools-dev \
+    automake \
+    autoconf \
     build-essential \
     wget \
     libboost-all-dev \
