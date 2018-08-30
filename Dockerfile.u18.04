@@ -1,8 +1,8 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 LABEL maintainer="poloniodavide@gmail.com"
 
-RUN apt-get update && apt-get install \
+RUN apt-get update && apt-get install -y \
     build-essential \
     wget \
     libboost-all-dev \
@@ -21,3 +21,4 @@ RUN aclocal -I m4 --install && \
     automake --add-missing && \
     ./configure && \
     make
+ 
