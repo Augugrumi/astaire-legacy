@@ -6,9 +6,9 @@ services:
   - docker
 # Distro versions
 env:
-  - BUILD_TARGET=u16.04 # Ubuntu16.04
-  - BUILD_TARGET=u18.04 # Ubuntu18.04
-  - BUILD_TARGET=u18.10 # Ubuntu18.10
+  - BUILD_TARGET=ubuntu16.04 # Ubuntu16.04
+  - BUILD_TARGET=ubuntu18.04 # Ubuntu18.04
+  - BUILD_TARGET=ubuntu18.10 # Ubuntu18.10
   - BUILD_TARGET=arch # Arch Linux
 script:
   - docker run -v $(pwd):/build augugrumi/astaire-dockerbuilds:$BUILD_TARGET
