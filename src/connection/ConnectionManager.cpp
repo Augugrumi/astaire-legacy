@@ -9,7 +9,7 @@
 
 namespace connection {
 
-// TODO think better initializer
+
 ConnectionManager::ConnectionManager(
 		const std::string &interface_name,
 		const std::string &ip

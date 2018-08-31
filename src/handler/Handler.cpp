@@ -23,4 +23,4 @@ void Handler::handleMessage(boost::shared_ptr<std::vector<uint8_t>> packet) cons
 }
 
 
-} /* namespace connectionmanager */
+} /* namespace handler */
