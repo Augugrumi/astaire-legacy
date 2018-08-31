@@ -47,7 +47,6 @@ void ConnectionManager::send(std::vector<uint8_t> &raw_packet) const {
 
 #if BOOST_VERSION >= 106600
 	boost::asio::post(*t_pool, boost::bind<void>(lambda, raw_packet));
-
 #else
 	BOOST_LOG_TRIVIAL(trace) << "Sending raw packet...";
 	boost::thread sender_thread(lambda, raw_packet);
@@ -59,13 +58,16 @@ void ConnectionManager::receive() const {
 	BOOST_LOG_TRIVIAL(trace) << "Receiving raw packet...";
 	std::vector<uint8_t> result = this->iface->receive();
 	boost::shared_ptr<std::vector<uint8_t>> packet_received = boost::shared_ptr<std::vector<uint8_t>>(&result);
-
 	auto lambda = [this](boost::shared_ptr<std::vector<uint8_t>> packet_received) {
 		this->handler->handleMessage(packet_received);
 	};
 
+#if BOOST_VERSION >= 106600
+	boost::asio::post(*t_pool, boost::bind<void>(lambda, packet_received));
+#else
 	boost::thread receive_thread(lambda, packet_received);
 	receive_thread.detach();
+#endif
 }
 
 } /* namespace connectionmanager */
