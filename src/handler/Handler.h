@@ -23,6 +23,6 @@ public:
 	void handleMessage(boost::shared_ptr<std::vector<uint8_t>> packet) const;
 };
 
-} /* namespace connectionmanager */
+} /* namespace handler */
 
 #endif /* HANDLER_HANDLER_H_ */
