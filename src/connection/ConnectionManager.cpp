@@ -10,7 +10,14 @@
 namespace connectionmanager {
 
 // TODO think better initializer
-ConnectionManager::ConnectionManager() : iface(), handler() {}
+ConnectionManager::ConnectionManager() : iface(), handler() {
+#if BOOST_VERSION >= 106600
+	BOOST_LOG_TRIVIAL(debug) << "Loading thread pool";
+	this->t_pool = boost::shared_ptr<boost::asio::thread_pool>(
+			new boost::asio::thread_pool(std::thread::hardware_concurrency()
+	));
+#endif
+}
 
 ConnectionManager::~ConnectionManager() {
 	// TODO Auto-generated destructor stub
@@ -34,26 +41,36 @@ void ConnectionManager::setMessageHandler(handler::Handler* handler){
 }
 
 void ConnectionManager::send(std::vector<uint8_t> &raw_packet) const {
-	BOOST_LOG_TRIVIAL(trace) << "Sending raw packet...";
+
 	auto lambda = [this](std::vector<uint8_t> &raw_packet) {
+		BOOST_LOG_TRIVIAL(trace) << "Sending packet in a new thread";
 		this->iface->send(raw_packet);
 	};
 
+#if BOOST_VERSION >= 106600
+	boost::asio::post(*t_pool, boost::bind<void>(lambda, raw_packet));
+#else
+	BOOST_LOG_TRIVIAL(trace) << "Sending raw packet...";
 	boost::thread sender_thread(lambda, raw_packet);
 	sender_thread.detach();
+#endif
 }
 
 void ConnectionManager::receive() const {
 	BOOST_LOG_TRIVIAL(trace) << "Receiving raw packet...";
 	std::vector<uint8_t> result = this->iface->receive();
 	boost::shared_ptr<std::vector<uint8_t>> packet_received = boost::shared_ptr<std::vector<uint8_t>>(&result);
-
 	auto lambda = [this](boost::shared_ptr<std::vector<uint8_t>> packet_received) {
+		BOOST_LOG_TRIVIAL(trace) << "Receiving packet in a new thread";
 		this->handler->handleMessage(packet_received);
 	};
 
+#if BOOST_VERSION >= 106600
+	boost::asio::post(*t_pool, boost::bind<void>(lambda, packet_received));
+#else
 	boost::thread receive_thread(lambda, packet_received);
 	receive_thread.detach();
+#endif
 }
 
 } /* namespace connectionmanager */
