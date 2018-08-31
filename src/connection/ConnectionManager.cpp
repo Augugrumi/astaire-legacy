@@ -46,7 +46,7 @@ void ConnectionManager::send(std::vector<uint8_t> &raw_packet) const {
 	};
 
 #if BOOST_VERSION >= 106600
-	boost::asio::post(*t_pool, boost::bind(lambda, raw_packet));
+	boost::asio::post(*t_pool, boost::bind<void>(lambda, raw_packet));
 
 #else
 	BOOST_LOG_TRIVIAL(trace) << "Sending raw packet...";
