@@ -7,10 +7,21 @@
 
 #include "ConnectionManager.h"
 
-namespace connectionmanager {
+namespace connection {
 
 // TODO think better initializer
-ConnectionManager::ConnectionManager() : iface(), handler() {
+ConnectionManager::ConnectionManager(
+		const std::string &interface_name,
+		const std::string &ip
+		) : iface(), handler() {
+
+	BOOST_LOG_TRIVIAL(debug) << "Setting up interface " << interface_name <<", with IP: " << ip;
+	iface = boost::shared_ptr<viface::VIface>(new viface::VIface(interface_name));
+	iface->setIPv4(ip);
+
+	BOOST_LOG_TRIVIAL(debug) << "Setting up message handler";
+	handler = boost::shared_ptr<handler::Handler>(new handler::Handler());
+
 #if BOOST_VERSION >= 106600
 	BOOST_LOG_TRIVIAL(debug) << "Loading thread pool";
 	this->t_pool = boost::shared_ptr<boost::asio::thread_pool>(
@@ -20,24 +31,14 @@ ConnectionManager::ConnectionManager() : iface(), handler() {
 }
 
 ConnectionManager::~ConnectionManager() {
-	// TODO Auto-generated destructor stub
-}
-
-// TODO Better move to constructor?
-void ConnectionManager::setupInterface(std::string interface_name, std::string ip) {
-	BOOST_LOG_TRIVIAL(debug) << "Setting up interface " << interface_name ;
-	iface = boost::shared_ptr<viface::VIface>(new viface::VIface(interface_name));
-	iface->setIPv4(ip);
+	// None to delete at the moment since all the heap is managed with
+	// shared_ptrs
 }
 
 void ConnectionManager::start() {
 	BOOST_LOG_TRIVIAL(debug) << "ConnectionManager has started";
 	if (iface && !iface->isUp())
 		iface->up();
-}
-
-void ConnectionManager::setMessageHandler(handler::Handler* handler){
-	this->handler = boost::shared_ptr<handler::Handler>(handler);
 }
 
 void ConnectionManager::send(std::vector<uint8_t> &raw_packet) const {

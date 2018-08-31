@@ -22,7 +22,7 @@
 
 #include "handler/Handler.h"
 
-namespace connectionmanager {
+namespace connection {
 
 /* Class that provides methods to accept and send packets
  * It must create the interface and turn it down
@@ -40,10 +40,8 @@ private:
 	void receive() const;
 
 public:
-	ConnectionManager();
-	void setupInterface(std::string interface_name, std::string ip);
-	void send(std::vector<uint8_t> &raw_packet) const;
-	void setMessageHandler(handler::Handler* handler);
+	ConnectionManager(const std::string&, const std::string&);
+	void send(std::vector<uint8_t> &) const;
 	void start();
 	virtual ~ConnectionManager();
 };
