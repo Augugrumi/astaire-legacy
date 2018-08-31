@@ -8,13 +8,13 @@
  ============================================================================
  */
 
-#include "iostream"
-#include "thread"
-#include "iomanip"
-#include "algorithm"
-#include "chrono"
-#include "csignal"
-#include "vector"
+#include <iostream>
+#include <thread>
+#include <iomanip>
+#include <algorithm>
+#include <chrono>
+#include <csignal>
+#include <vector>
 #include "viface/viface.hpp"
 #include "tins/tins.h"
 #include "config.h"
@@ -105,9 +105,10 @@ int main(int argc, const char* argv[])
 	BOOST_LOG_TRIVIAL(info) << "Using a version of boost newer then 1.66!";
 #endif
 
-    cout << "Starting threads example ..." << endl;
+    //cout << "Starting threads example ..." << endl;
+    signal(SIGINT, signal_handler);
 
-    try {
+    /*try {
         // Create and bring-up interface
         viface::VIface iface("test");
         iface.setIPv4("127.0.0.1");
@@ -115,7 +116,6 @@ int main(int argc, const char* argv[])
         	iface.up();
 
         // Setup signal handling to stop execution
-        signal(SIGINT, signal_handler);
 
         Tins::EthernetII pkt = \
                     Tins::EthernetII(Tins::EthernetII::BROADCAST, iface.getMAC()) /
@@ -158,7 +158,7 @@ int main(int argc, const char* argv[])
     } catch(exception const & ex) {
         cerr << ex.what() << endl;
         return -1;
-    }
+    }*/
 
     return 0;
 }
