@@ -28,7 +28,7 @@ These are the distro we officially support. If you want, you can add Dockerfiles
 
 To build with docker, clone the repository, and then, in the root of the project, run:
 ```bash
-docker run --rm -v $(pwd):/build augugrumi/astaire-dockerbuilds:ubuntu16.04
+docker run --rm -u"1000:1000" -v $(pwd):/build augugrumi/astaire-dockerbuilds:ubuntu16.04
 ```
 Available tags are:
 - `ubuntu16.04`
