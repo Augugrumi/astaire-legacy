@@ -15,12 +15,17 @@
 #include <chrono>
 #include <csignal>
 #include <vector>
-#include "viface/viface.hpp"
-#include "tins/tins.h"
-#include "config.h"
-
+#include <viface/viface.hpp>
+#include <tins/tins.h>
 #include <boost/log/trivial.hpp>
 #include <boost/version.hpp>
+#include <boost/shared_ptr.hpp>
+#include <unistd.h>
+#include <sys/types.h>
+
+#include "config.h"
+#include "connection/ConnectionManager.h"
+
 
 using namespace std;
 
@@ -96,6 +101,9 @@ void send_wkr(viface::VIface* iface, vector<uint8_t> pkt)
  * Sadly, signals doesn't propagate to child threads, and thus select() and
  * sleep() calls don't get interrupted, and thus polling is required :/
  */
+
+typedef boost::shared_ptr<connection::ConnectionManager> SmartConn;
+
 int main(int argc, const char* argv[])
 {
 
@@ -105,8 +113,17 @@ int main(int argc, const char* argv[])
 	BOOST_LOG_TRIVIAL(info) << "Using a version of boost newer then 1.66!";
 #endif
 
-    //cout << "Starting threads example ..." << endl;
     signal(SIGINT, signal_handler);
+
+    // Returned is uid_t, that's an unsigned int
+    if (getuid() != 0) {
+    	BOOST_LOG_TRIVIAL(fatal) << PACKAGE_NAME << " must run as root. Exiting";
+    	exit(1);
+    }
+
+    SmartConn connection = SmartConn(
+    		new connection::ConnectionManager("vnf0", "127.0.0.1")
+    );
 
     /*try {
         // Create and bring-up interface
