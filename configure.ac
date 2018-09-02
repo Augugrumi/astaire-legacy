@@ -22,6 +22,9 @@ AC_CHECK_LIB(tins, main, [astaire_LIBS+=" -ltins"], [AC_MSG_ERROR([main was not 
 
 AC_CHECK_LIB(pcap, pcap_loop, [astaire_LIBS+=" -lpcap"], [AC_MSG_ERROR([pcap_loop was not found in libpcap])])
 
+AC_CHECK_LIB(jsoncpp, main, [astaire_LIBS+=" -ljsoncpp"], [AC_MSG_ERROR("main was not found in libjsoncpp")])
+
+
 dnl Checking boost dependencies
 AX_BOOST_BASE([1.58],[astaire_ADDITIONALFLAGS="-DBOOST_LOG_DYN_LINK"], [AC_MSG_ERROR([astaire needs Boost, but it was not found in your system])])
 AX_BOOST_THREAD
@@ -33,8 +36,11 @@ astaire_LIBS+=" -lboost_thread"
 astaire_LIBS+=" -lboost_system"
 
 dnl Adding the library to link to the Makefile
-AC_SUBST(astaire_LIBS, $astaire_LIBS)
+AC_SUBST(astaire_LIBS, "$astaire_LIBS -L$JAVA_HOME/jre/lib/amd64/server")
+AC_SUBST(astaire_ADDITIONALFLAGS, "$astaire_ADDITIONALFLAGS -I$JAVA_HOME/include/")
+AC_SUBST(astaire_ADDITIONALFLAGS, "$astaire_ADDITIONALFLAGS -I$JAVA_HOME/include/linux/")
 AC_SUBST(astaire_CUSTOMFLAGS, $astaire_ADDITIONALFLAGS)
 
 AC_OUTPUT
 
+AC_MSG_NOTICE(["$JAVA_HOME"])
