@@ -20,10 +20,10 @@ namespace handler {
 class JavaHandler : public Handler {
 private:
 	uint8_t* execute_java(const std::string& class_file_path, const std::string& class_name,
-			const std::string& method_name, uint8_t pkt [], int pkt_size);
+			const std::string& method_name, uint8_t pkt [], int pkt_size) const;
 public:
-	void handleMessage(boost::shared_ptr<std::vector<uint8_t>> packet) const;
-	virtual ~JavaHandler();
+	JavaHandler(const std::string& config_file);
+	virtual void handleMessage(boost::shared_ptr<std::vector<uint8_t>> packet) const;
 };
 
 } /* namespace connectionmanager */

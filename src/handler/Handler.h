@@ -8,8 +8,10 @@
 #ifndef HANDLER_HANDLER_H_
 #define HANDLER_HANDLER_H_
 
+#include <string>
 #include <vector>
 #include <boost/shared_ptr.hpp>
+#include "utils/JsonUtils.h"
 
 namespace handler {
 
@@ -17,10 +19,12 @@ namespace handler {
  * Class that handle message received
  */
 class Handler {
+protected:
+	utils::JsonUtils::JsonWrapper* config;
 public:
-	Handler();
+	Handler(const std::string& config_path);
+	virtual void handleMessage(boost::shared_ptr<std::vector<uint8_t>> packet) const =0;
 	virtual ~Handler();
-	void handleMessage(boost::shared_ptr<std::vector<uint8_t>> packet) const;
 };
 
 } /* namespace handler */

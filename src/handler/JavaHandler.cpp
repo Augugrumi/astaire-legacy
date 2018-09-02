@@ -9,9 +9,11 @@
 
 namespace handler {
 
+JavaHandler::JavaHandler(const std::string& config_file) : Handler(config_file) {}
+
 uint8_t* JavaHandler::execute_java(const std::string& class_file_path,
 		const std::string& class_name, const std::string& method_name,
-		uint8_t pkt [], int pkt_size) {
+		uint8_t pkt [], int pkt_size) const {
 	uint8_t* new_pkt = nullptr;
 	// Pointer to the JVM (Java Virtual Machine)
 	JavaVM *jvm;
@@ -83,6 +85,15 @@ uint8_t* JavaHandler::execute_java(const std::string& class_file_path,
 		jvm->DestroyJavaVM();
 		return new_pkt;
 	}
+}
+
+void JavaHandler::handleMessage(boost::shared_ptr<std::vector<uint8_t>> packet) const {
+	uint8_t* pkt = packet->data();
+	int pkt_size = sizeof(pkt)/sizeof(*pkt);
+	pkt = execute_java(config->getField(utils::JsonUtils::FILE_PATH),
+			config->getField(utils::JsonUtils::CLASS_NAME),
+			config->getField(utils::JsonUtils::METHOD),
+			pkt, pkt_size);
 }
 
 } /* namespace connectionmanager */

@@ -1,7 +1,7 @@
 /*
  * Handler.cpp
  *
- *  Created on: Aug 28, 2018
+ *  Created on: Aug 31, 2018
  *      Author: zanna
  */
 
@@ -9,18 +9,10 @@
 
 namespace handler {
 
-Handler::Handler() {
-	// TODO Auto-generated constructor stub
-
-}
+Handler::Handler(const std::string& config_path) : config(new utils::JsonUtils::JsonWrapper(config_path)) {}
 
 Handler::~Handler() {
-	// TODO Auto-generated destructor stub
+	delete this->config;
 }
 
-void Handler::handleMessage(boost::shared_ptr<std::vector<uint8_t>> packet) const {
-	// TODO Handle received packet
 }
-
-
-} /* namespace handler */

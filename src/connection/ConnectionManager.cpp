@@ -20,7 +20,6 @@ ConnectionManager::ConnectionManager(
 	iface->setIPv4(ip);
 
 	BOOST_LOG_TRIVIAL(debug) << "Setting up message handler";
-	handler = boost::shared_ptr<handler::Handler>(new handler::Handler());
 
 #if BOOST_VERSION >= 106600
 	BOOST_LOG_TRIVIAL(debug) << "Loading thread pool";
@@ -28,6 +27,10 @@ ConnectionManager::ConnectionManager(
 			new boost::asio::thread_pool(std::thread::hardware_concurrency()
 	));
 #endif
+}
+
+void ConnectionManager::setHandler(handler::Handler* handler) {
+	this->handler = boost::shared_ptr<handler::Handler>(handler);
 }
 
 ConnectionManager::~ConnectionManager() {
