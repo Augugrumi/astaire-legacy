@@ -37,10 +37,9 @@ astaire_LIBS+=" -lboost_system"
 
 dnl Adding the library to link to the Makefile
 AC_SUBST(astaire_LIBS, "$astaire_LIBS -L$JAVA_HOME/jre/lib/amd64/server")
+AC_SUBST(astaire_LIBS, "$astaire_LIBS -ljvm")
 AC_SUBST(astaire_ADDITIONALFLAGS, "$astaire_ADDITIONALFLAGS -I$JAVA_HOME/include/")
 AC_SUBST(astaire_ADDITIONALFLAGS, "$astaire_ADDITIONALFLAGS -I$JAVA_HOME/include/linux/")
 AC_SUBST(astaire_CUSTOMFLAGS, $astaire_ADDITIONALFLAGS)
 
 AC_OUTPUT
-
-AC_MSG_NOTICE(["$JAVA_HOME"])
