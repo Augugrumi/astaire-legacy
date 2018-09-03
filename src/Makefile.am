@@ -9,7 +9,11 @@ astaire_SOURCES=Astaire.cpp \
 astaire_LDADD=$(astaire_LIBS)
 
 if ENABLE_JAVA
-	if JAVA_HOME_SET
-		astaire_CXXFLAGS="$(astaire_CXXFLAGS) -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux" 
-	endif
+if JAVA_HOME_SET
+astaire_CXXFLAGS="$(astaire_CXXFLAGS) -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux" 
+endif
+endif
+
+if JSONCPP_PATH
+astaire_CXXFLAGS="$(astaire_CXXFLAGS) -I/usr/include/jsoncpp/"
 endif

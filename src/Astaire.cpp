@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <jsoncpp/json/json.h>
+#include <json/json.h>
 #include <fstream>
 #include <viface/viface.hpp>
 #include <tins/tins.h>
