@@ -10,12 +10,13 @@
 namespace utils {
 
 handler::Handler* HandlerUtils::getHandlerByLanguageName(const std::string & language, const std::string & config_file) {
+#if ENABLE_JAVA
 	if (boost::iequals("java", language)) {
 		return new handler::JavaHandler(config_file);
-	} else {
-		BOOST_LOG_TRIVIAL(fatal) << PACKAGE_NAME << " language not recognized. Exiting";
-		exit(1);
 	}
+#endif
+	BOOST_LOG_TRIVIAL(fatal) << PACKAGE_NAME << " doesn't have " << language << " bindings yet. Exiting";
+	exit(1);
 }
 
 } /* namespace utils */

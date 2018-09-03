@@ -4,10 +4,9 @@
  *  Created on: Aug 31, 2018
  *      Author: zanna
  */
-
+#if ENABLE_JAVA
 #ifndef HANDLER_JAVAHANDLER_H_
 #define HANDLER_JAVAHANDLER_H_
-
 #include "Handler.h"
 #include <jni.h>
 #include <iostream>
@@ -27,5 +26,5 @@ public:
 };
 
 } /* namespace connectionmanager */
-
 #endif /* HANDLER_JAVAHANDLER_H_ */
+#endif

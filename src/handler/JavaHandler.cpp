@@ -4,7 +4,7 @@
  *  Created on: Aug 31, 2018
  *      Author: zanna
  */
-
+#if ENABLE_JAVA
 #include "JavaHandler.h"
 
 namespace handler {
@@ -97,3 +97,4 @@ void JavaHandler::handleMessage(boost::shared_ptr<std::vector<uint8_t>> packet) 
 }
 
 } /* namespace connectionmanager */
+#endif

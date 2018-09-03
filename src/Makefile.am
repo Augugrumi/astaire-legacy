@@ -7,4 +7,9 @@ astaire_SOURCES=Astaire.cpp \
                 utils/JsonUtils.cpp \
                 utils/HandlerUtils.cpp
 astaire_LDADD=$(astaire_LIBS)
-astaire_CXXFLAGS=$(astaire_CUSTOMFLAGS)
+
+if ENABLE_JAVA
+	if JAVA_HOME_SET
+		astaire_CXXFLAGS="$(astaire_CXXFLAGS) -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux" 
+	endif
+endif
