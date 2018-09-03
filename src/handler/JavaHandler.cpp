@@ -4,7 +4,7 @@
  *  Created on: Aug 31, 2018
  *      Author: zanna
  */
-#if ENABLE_JAVA
+#if ENABLE_JAVA==1
 #include "JavaHandler.h"
 
 namespace handler {
