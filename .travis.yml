@@ -9,11 +9,13 @@ env:
   global:
     - MAKEFLAGS="-j 2"
   matrix:
-    - BUILD_TARGET=ubuntu16.04 # Ubuntu16.04
-    - BUILD_TARGET=ubuntu18.04 # Ubuntu18.04
-    - BUILD_TARGET=ubuntu18.10 # Ubuntu18.10
-    - BUILD_TARGET=arch # Arch Linux
-    - WITH_JAVA=true
-    - WITH_JAVA=false
+    - BUILD_TARGET=ubuntu16.04 WITH_JAVA=true # Ubuntu16.04
+    - BUILD_TARGET=ubuntu16.04 WITH_JAVA=false # Ubuntu16.04
+    - BUILD_TARGET=ubuntu18.04 WITH_JAVA=true # Ubuntu18.04
+    - BUILD_TARGET=ubuntu18.04 WITH_JAVA=false # Ubuntu18.04
+    - BUILD_TARGET=ubuntu18.10 WITH_JAVA=true # Ubuntu18.10
+    - BUILD_TARGET=ubuntu18.10 WITH_JAVA=false # Ubuntu18.10
+    - BUILD_TARGET=arch WITH_JAVA=true # Arch Linux
+    - BUILD_TARGET=arch WITH_JAVA=false # Arch Linux
 script:
   - docker run -v $(pwd):/build augugrumi/astaire-dockerbuilds:$BUILD_TARGET
