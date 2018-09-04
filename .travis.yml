@@ -6,9 +6,16 @@ services:
   - docker
 # Distro versions
 env:
-  - BUILD_TARGET=ubuntu16.04 # Ubuntu16.04
-  - BUILD_TARGET=ubuntu18.04 # Ubuntu18.04
-  - BUILD_TARGET=ubuntu18.10 # Ubuntu18.10
-  - BUILD_TARGET=arch # Arch Linux
+  global:
+    - MAKEFLAGS="-j 2"
+  matrix:
+    - BUILD_TARGET=ubuntu16.04 CONFIGURE_FLAGS=--with-java # Ubuntu16.04
+    - BUILD_TARGET=ubuntu16.04 CONFIGURE_FLAGS="" # Ubuntu16.04
+    - BUILD_TARGET=ubuntu18.04 CONFIGURE_FLAGS=--with-java # Ubuntu18.04
+    - BUILD_TARGET=ubuntu18.04 CONFIGURE_FLAGS="" # Ubuntu18.04
+    - BUILD_TARGET=ubuntu18.10 CONFIGURE_FLAGS=--with-java # Ubuntu18.10
+    - BUILD_TARGET=ubuntu18.10 CONFIGURE_FLAGS="" # Ubuntu18.10
+    - BUILD_TARGET=arch CONFIGURE_FLAGS=--with-java # Arch Linux
+    - BUILD_TARGET=arch CONFIGURE_FLAGS="" # Arch Linux
 script:
-  - docker run -v $(pwd):/build augugrumi/astaire-dockerbuilds:$BUILD_TARGET
+  - docker run -e MAKEFLAGS="$MAKEFLAGS" -v $(pwd):/build augugrumi/astaire-dockerbuilds:$BUILD_TARGET $CONFIGURE_FLAGS

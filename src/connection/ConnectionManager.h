@@ -41,6 +41,7 @@ private:
 
 public:
 	ConnectionManager(const std::string&, const std::string&);
+	void setHandler(handler::Handler* handler);
 	void send(std::vector<uint8_t> &) const;
 	void start();
 	virtual ~ConnectionManager();

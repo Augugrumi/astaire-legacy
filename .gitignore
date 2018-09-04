@@ -52,3 +52,18 @@ src/stamp-h1
 .*.*
 **/.deps/
 **/.dirstamp
+
+# eclipse
+.cproject
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+.directory
