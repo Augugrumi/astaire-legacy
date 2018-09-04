@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <set>
+#include <functional>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 #include <viface/viface.hpp>
@@ -37,7 +39,7 @@ private:
 #if BOOST_VERSION >= 106600
 	boost::shared_ptr<boost::asio::thread_pool> t_pool;
 #endif
-	void receive() const;
+	bool receive(std::string const& name, uint id, std::vector<uint8_t>& packet) const;
 
 public:
 	ConnectionManager(const std::string&, const std::string&);

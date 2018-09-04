@@ -40,8 +40,19 @@ ConnectionManager::~ConnectionManager() {
 
 void ConnectionManager::start() {
 	BOOST_LOG_TRIVIAL(debug) << "ConnectionManager has started";
-	if (iface && !iface->isUp())
+	if (iface && !iface->isUp()) {
 		iface->up();
+	}
+
+	std::set<viface::VIface*> ifaces = {&(*iface)};
+
+	viface::dispatch(ifaces, std::bind<bool>(
+			&ConnectionManager::receive,
+			this,
+			std::placeholders::_1,
+			std::placeholders::_2,
+			std::placeholders::_3));
+
 }
 
 void ConnectionManager::send(std::vector<uint8_t> &raw_packet) const {
@@ -52,7 +63,7 @@ void ConnectionManager::send(std::vector<uint8_t> &raw_packet) const {
 	};
 
 #if BOOST_VERSION >= 106600
-	boost::asio::post(*t_pool, boost::bind<void>(lambda, raw_packet));
+	boost::asio::post(&(*t_pool), boost::bind<void>(lambda, raw_packet));
 #else
 	BOOST_LOG_TRIVIAL(trace) << "Sending raw packet...";
 	boost::thread sender_thread(lambda, raw_packet);
@@ -60,7 +71,7 @@ void ConnectionManager::send(std::vector<uint8_t> &raw_packet) const {
 #endif
 }
 
-void ConnectionManager::receive() const {
+bool ConnectionManager::receive(std::string const& name, uint id, std::vector<uint8_t>& packet) const {
 	BOOST_LOG_TRIVIAL(trace) << "Receiving raw packet...";
 	std::vector<uint8_t> result = this->iface->receive();
 	boost::shared_ptr<std::vector<uint8_t>> packet_received = boost::shared_ptr<std::vector<uint8_t>>(&result);
@@ -70,11 +81,12 @@ void ConnectionManager::receive() const {
 	};
 
 #if BOOST_VERSION >= 106600
-	boost::asio::post(*t_pool, boost::bind<void>(lambda, packet_received));
+	boost::asio::post(&(*t_pool), boost::bind<void>(lambda, packet_received));
 #else
 	boost::thread receive_thread(lambda, packet_received);
 	receive_thread.detach();
 #endif
+	return true;
 }
 
 } /* namespace connectionmanager */

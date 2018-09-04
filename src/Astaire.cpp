@@ -68,6 +68,7 @@ int main(int argc, const char* argv[])
     handler::Handler* h = utils::HandlerUtils::getHandlerByLanguageName(
     		utils::JsonUtils::JsonWrapper(path).getField(utils::JsonUtils::LAUNGUAGE), path);
 	connection->setHandler(h);
+	connection->start();
 
     return 0;
 }
