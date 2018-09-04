@@ -14,6 +14,6 @@ astaire_CXXFLAGS="$(astaire_CXXFLAGS) -I$(JAVA_HOME)/include -I$(JAVA_HOME)/incl
 endif
 endif
 
-if JSONCPP_PATH
-astaire_CXXFLAGS="$(astaire_CXXFLAGS) -I/usr/include/jsoncpp/"
-endif
+#if JSONCPP_INCLUDE_PATH_FIX
+#astaire_CXXFLAGS="$(astaire_CXXFLAGS) -I/usr/include/jsoncpp/"
+#endif

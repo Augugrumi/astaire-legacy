@@ -12,7 +12,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "config.h"
+#if JSONCPP_INCLUDE_PATH_FIX
+#include <jsoncpp/json/json.h>
+#else
 #include <json/json.h>
+#endif
 #include <fstream>
 #include <viface/viface.hpp>
 #include <tins/tins.h>
@@ -21,7 +26,6 @@
 #include <boost/shared_ptr.hpp>
 #include <sys/types.h>
 
-#include "config.h"
 #include "connection/ConnectionManager.h"
 #include "utils/JsonUtils.h"
 #include "utils/HandlerUtils.h"

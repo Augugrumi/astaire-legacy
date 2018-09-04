@@ -43,13 +43,13 @@ distro_name=$(cat /etc/os-release | grep ID= | head -n1 | cut -d"=" -f2)
 AC_MSG_RESULT([checking for distro in use... $distro_name])
 
 dnl Checking specific Jsoncpp include path
-AM_CONDITIONAL([JSONCPP_PATH], [test "$distro_name" == ubuntu])
-AM_COND_IF([JSONCPP_PATH],
-      AC_MSG_RESULT([checking if path to jsoncpp headers need to be fixed... fixed])
-      AC_DEFINE([JSONCPP_PATH], [1], [JSONCPP specific path])
+AM_CONDITIONAL([JSONCPP_INCLUDE_PATH_FIX], [test "$distro_name" == ubuntu])
+AM_COND_IF([JSONCPP_INCLUDE_PATH_FIX],
+      AC_MSG_RESULT([checking if path to jsoncpp headers need to be fixed... to fix])
+      AC_DEFINE([JSONCPP_INCLUDE_PATH_FIX], [1], [JSONCPP specific path])
       AC_CHECK_LIB(jsoncpp, main,[astaire_LIBS+=" -ljsoncpp"],[AC_MSG_ERROR("main was not found in libjsoncpp")]),
       AC_MSG_RESULT([checking if path to jsoncpp headers need to be fixed... nothing to fix])
-      AC_DEFINE([JSONCPP_PATH], [0], [JSONCPP specific path])
+      AC_DEFINE([JSONCPP_INCLUDE_PATH_FIX], [0], [JSONCPP specific path])
       AC_CHECK_LIB(jsoncpp, main,[astaire_LIBS+=" -ljsoncpp"],[AC_MSG_ERROR("main was not found in libjsoncpp")]))
 
 dnl Checking boost dependencies
