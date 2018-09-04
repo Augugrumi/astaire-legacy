@@ -25,17 +25,23 @@ distro_name=$(cat /etc/os-release | grep ID= | head -n1 | cut -d"=" -f2)
 AC_MSG_RESULT([checking for distro in use... $distro_name])
 
 if test -z "$JAVA_HOME"; then
-#ifelse("$distro_name", "ubuntu", JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-amd64", \
-#       "$distro_name", "arch", JAVA_HOME="/usr/lib/jvm/java-8-openjdk", \
-#       "$distro_name", "alpine", JAVA_HOME="/usr/lib/jvm/java-1.8-openjdk")
 if test "$distro_name" = "ubuntu"; then
 JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-amd64"
+else
+jecounter=n
 fi
 if test "$distro_name" = "arch"; then
 JAVA_HOME="/usr/lib/jvm/java-8-openjdk"
+else
+jecounter+=n
 fi
 if test "$distro_name" = "alpine"; then
 JAVA_HOME="/usr/lib/jvm/java-1.8-openjdk"
+else
+jecounter+=n
+fi
+if test "$jecounter" = "nnn"; then
+AC_MSG_ERROR([platform "$distro_name" not supported without JAVA_HOME already set.])
 fi
 fi
 
