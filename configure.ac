@@ -24,6 +24,7 @@ AM_CONDITIONAL([ENABLE_JAVA], [test x$jni_on = x1])
 distro_name=$(cat /etc/os-release | grep ID= | head -n1 | cut -d"=" -f2)
 AC_MSG_RESULT([checking for distro in use... $distro_name])
 
+# TODO: add ENABLE_JAVA check contition
 if test -z "$JAVA_HOME"; then
 if test "$distro_name" = "ubuntu"; then
 JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-amd64"
