@@ -63,7 +63,7 @@ void ConnectionManager::send(std::vector<uint8_t> &raw_packet) const {
 	};
 
 #if BOOST_VERSION >= 106600
-	boost::asio::post(&(*t_pool), boost::bind<void>(lambda, raw_packet));
+	boost::asio::post(*t_pool, boost::bind<void>(lambda, raw_packet));
 #else
 	BOOST_LOG_TRIVIAL(trace) << "Sending raw packet...";
 	boost::thread sender_thread(lambda, raw_packet);
@@ -81,7 +81,7 @@ bool ConnectionManager::receive(std::string const& name, uint id, std::vector<ui
 	};
 
 #if BOOST_VERSION >= 106600
-	boost::asio::post(&(*t_pool), boost::bind<void>(lambda, packet_received));
+	boost::asio::post(*t_pool, boost::bind<void>(lambda, packet_received));
 #else
 	boost::thread receive_thread(lambda, packet_received);
 	receive_thread.detach();
