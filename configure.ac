@@ -20,6 +20,11 @@ AC_ARG_WITH([java],
 		[jni_on=1],
 		[jni_on=0])
 AM_CONDITIONAL([ENABLE_JAVA], [test x$jni_on = x1])
+
+if test -z "$JAVA_HOME"; then
+JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-amd64"
+fi
+
 AM_COND_IF([ENABLE_JAVA],
 	   AC_MSG_RESULT([checking java bindings... enabled])
 	   [astaire_ADDITIONALFLAGS+=" -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"]
