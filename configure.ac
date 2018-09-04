@@ -21,8 +21,15 @@ AC_ARG_WITH([java],
 		[jni_on=0])
 AM_CONDITIONAL([ENABLE_JAVA], [test x$jni_on = x1])
 
+distro_name=$(cat /etc/os-release | grep ID= | head -n1 | cut -d"=" -f2)
+AC_MSG_RESULT([checking for distro in use... $distro_name])
+
 if test -z "$JAVA_HOME"; then
+if test "$distro_name" = "ubuntu"; then
 JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-amd64"
+else
+JAVA_HOME="/usr/lib/jvm/java-8-openjdk"
+fi
 fi
 
 AM_COND_IF([ENABLE_JAVA],
@@ -42,10 +49,6 @@ AC_CHECK_LIB(pthread, pthread_create, [astaire_LIBS+=" -lpthread"], [AC_MSG_ERRO
 AC_CHECK_LIB(tins, main, [astaire_LIBS+=" -ltins"], [AC_MSG_ERROR([main was not found in libtins])])
 
 AC_CHECK_LIB(pcap, pcap_loop, [astaire_LIBS+=" -lpcap"], [AC_MSG_ERROR([pcap_loop was not found in libpcap])])
-
-distro_name=$(cat /etc/os-release | grep ID= | head -n1 | cut -d"=" -f2)
-
-AC_MSG_RESULT([checking for distro in use... $distro_name])
 
 dnl Checking specific Jsoncpp include path
 AM_CONDITIONAL([JSONCPP_INCLUDE_PATH_FIX], [test "$distro_name" == ubuntu])
