@@ -25,6 +25,7 @@ distro_name=$(cat /etc/os-release | grep ID= | head -n1 | cut -d"=" -f2)
 AC_MSG_RESULT([checking for distro in use... $distro_name])
 
 # TODO: add ENABLE_JAVA check contition
+if test "$jni_on" = "1"; then
 if test -z "$JAVA_HOME"; then
 if test "$distro_name" = "ubuntu"; then
 JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-amd64"
@@ -45,8 +46,8 @@ if test "$jecounter" = "nnn"; then
 AC_MSG_ERROR([platform "$distro_name" not supported without JAVA_HOME already set.])
 fi
 fi
-
 AC_MSG_RESULT([checking java home... $JAVA_HOME])
+fi
 
 AM_COND_IF([ENABLE_JAVA],
 	   AC_MSG_RESULT([checking java bindings... enabled])
