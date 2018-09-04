@@ -13,7 +13,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>
+#include "config.h"
+#if JSONCPP_INCLUDE_PATH_FIX
 #include <jsoncpp/json/json.h>
+#else
+#include <json/json.h>
+#endif
 
 namespace utils {
 
