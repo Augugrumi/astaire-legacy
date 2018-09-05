@@ -46,12 +46,21 @@ void ConnectionManager::start() {
 
 	std::set<viface::VIface*> ifaces = {&(*iface)};
 
+	while(true) {
+		std::vector<uint8_t> result = this->iface->receive();
+		//BOOST_LOG_TRIVIAL(trace) << "old packet size: " << result.size();
+		if (result.size() > 0)
+		for (std::vector<uint8_t>::const_iterator it = result.cbegin(); it!=result.cend(); it++) {
+			BOOST_LOG_TRIVIAL(trace) << *it << " old packet";
+		}
+	}
+
 	viface::dispatch(ifaces, std::bind<bool>(
-			&ConnectionManager::receive,
-			this,
-			std::placeholders::_1,
-			std::placeholders::_2,
-			std::placeholders::_3));
+				&ConnectionManager::receive,
+				this,
+				std::placeholders::_1,
+				std::placeholders::_2,
+				std::placeholders::_3));
 
 }
 
@@ -74,7 +83,13 @@ void ConnectionManager::send(std::vector<uint8_t> &raw_packet) const {
 bool ConnectionManager::receive(std::string const& name, uint id, std::vector<uint8_t>& packet) const {
 	BOOST_LOG_TRIVIAL(trace) << "Receiving raw packet...";
 	std::vector<uint8_t> result = this->iface->receive();
-	boost::shared_ptr<std::vector<uint8_t>> packet_received = boost::shared_ptr<std::vector<uint8_t>>(&result);
+	BOOST_LOG_TRIVIAL(trace) << "old packet size: " << result.size();
+	for (std::vector<uint8_t>::const_iterator it = result.cbegin(); it!=result.cend(); it++) {
+		BOOST_LOG_TRIVIAL(trace) << *it << " old packet";
+	}
+	boost::shared_ptr<std::vector<uint8_t>> packet_received = boost::shared_ptr<std::vector<uint8_t>>(new std::vector<uint8_t>(packet));
+	this->handler->handleMessage(packet_received);
+	/*boost::shared_ptr<std::vector<uint8_t>> packet_received = boost::shared_ptr<std::vector<uint8_t>>(&result);
 	auto lambda = [this](boost::shared_ptr<std::vector<uint8_t>> packet_received) {
 		BOOST_LOG_TRIVIAL(trace) << "Receiving packet in a new thread";
 		this->handler->handleMessage(packet_received);
@@ -85,7 +100,7 @@ bool ConnectionManager::receive(std::string const& name, uint id, std::vector<ui
 #else
 	boost::thread receive_thread(lambda, packet_received);
 	receive_thread.detach();
-#endif
+#endif*/
 	return true;
 }
 

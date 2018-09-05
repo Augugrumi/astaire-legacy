@@ -4,6 +4,7 @@ astaire_SOURCES=Astaire.cpp \
                 connection/Packet.cpp \
                 handler/Handler.cpp \
                 handler/JavaHandler.cpp \
+                handler/HelloWorldHandler.cpp \
                 utils/JsonUtils.cpp \
                 utils/HandlerUtils.cpp
 astaire_LDADD=$(astaire_LIBS)

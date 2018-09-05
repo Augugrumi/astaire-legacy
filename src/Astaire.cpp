@@ -62,7 +62,7 @@ int main(int argc, const char* argv[])
 	}
 
     SmartConn connection = SmartConn(
-    		new connection::ConnectionManager("vnf0", "127.0.0.1")
+    		new connection::ConnectionManager("vnf0", "10.0.0.3")
     );
 
     handler::Handler* h = utils::HandlerUtils::getHandlerByLanguageName(
