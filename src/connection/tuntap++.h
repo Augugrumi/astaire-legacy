@@ -6,6 +6,7 @@
 #include <tuntap.h>
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <algorithm>
 #include <boost/log/trivial.hpp>
 #include <arpa/inet.h>

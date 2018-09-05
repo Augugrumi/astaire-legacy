@@ -50,11 +50,16 @@ int main(int argc, const char* argv[])
 
     int c ;
 	opterr = 0;
-	while ((c = getopt(argc, (char **)argv, "c:")) != -1) {
+	while ((c = getopt(argc, (char **)argv, "c:p:")) != -1) {
 		switch(c) {
 			case 'c':
 				if(optarg) {
 					path = optarg;
+				}
+				break;
+			case 'p':
+				if(optarg) {
+					port = atoi(optarg);
 				}
 				break;
 		}
