@@ -19,8 +19,6 @@
 #include <json/json.h>
 #endif
 #include <fstream>
-#include <viface/viface.hpp>
-#include <tins/tins.h>
 #include <boost/log/trivial.hpp>
 #include <boost/version.hpp>
 #include <boost/shared_ptr.hpp>
@@ -62,7 +60,7 @@ int main(int argc, const char* argv[])
 	}
 
     SmartConn connection = SmartConn(
-    		new connection::ConnectionManager("vnf0", "127.0.0.1")
+                                     new connection::ConnectionManager("vnf0", "10.0.0.3", 16)
     );
 
     handler::Handler* h = utils::HandlerUtils::getHandlerByLanguageName(

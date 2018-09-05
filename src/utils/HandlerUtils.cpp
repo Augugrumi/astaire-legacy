@@ -15,8 +15,10 @@ handler::Handler* HandlerUtils::getHandlerByLanguageName(const std::string & lan
 		return new handler::JavaHandler(config_file);
 	}
 #endif
-	BOOST_LOG_TRIVIAL(fatal) << PACKAGE_NAME << " doesn't have " << language << " bindings yet. Exiting";
-	exit(1);
+	//BOOST_LOG_TRIVIAL(fatal) << PACKAGE_NAME << " doesn't have " << language << " bindings yet. Exiting";
+	//exit(1);
+  BOOST_LOG_TRIVIAL(debug) << "Returning dummy handler";
+  return new handler::HelloWorldHandler();
 }
 
 } /* namespace utils */

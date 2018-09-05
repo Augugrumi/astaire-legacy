@@ -4,7 +4,7 @@
  *  Created on: Aug 28, 2018
  *      Author: zanna
  */
-
+#pragma once
 #ifndef CONNECTION_CONNECTIONMANAGER_H_
 #define CONNECTION_CONNECTIONMANAGER_H_
 
@@ -12,10 +12,11 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <thread>
+#include <chrono>
 #include <functional>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
-#include <viface/viface.hpp>
 #include <boost/log/trivial.hpp>
 #if BOOST_VERSION > 106600
 #include <boost/asio/thread_pool.hpp>
@@ -23,6 +24,7 @@
 #endif
 
 #include "handler/Handler.h"
+#include "tuntap++.h"
 
 namespace connection {
 
@@ -35,14 +37,14 @@ class ConnectionManager {
 
 private:
 	boost::shared_ptr<handler::Handler> handler;
-	boost::shared_ptr<viface::VIface> iface;
+  boost::shared_ptr<tuntap::tun> tun;
 #if BOOST_VERSION >= 106600
 	boost::shared_ptr<boost::asio::thread_pool> t_pool;
 #endif
 	bool receive(std::string const& name, uint id, std::vector<uint8_t>& packet) const;
 
 public:
-	ConnectionManager(const std::string&, const std::string&);
+	ConnectionManager(const std::string&, const std::string&, int);
 	void setHandler(handler::Handler* handler);
 	void send(std::vector<uint8_t> &) const;
 	void start();

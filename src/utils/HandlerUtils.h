@@ -14,6 +14,7 @@
 #include "config.h"
 #include "handler/Handler.h"
 #include "handler/JavaHandler.h"
+#include "handler/HelloWorldHandler.h"
 
 namespace utils {
 
