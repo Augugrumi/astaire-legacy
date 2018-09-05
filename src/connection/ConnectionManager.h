@@ -46,7 +46,7 @@ public:
 	ConnectionManager(const std::string&, const std::string&, int);
 	void setHandler(handler::Handler* handler);
 	void send(std::vector<uint8_t> &) const;
-  bool receive(/*std::string const& name, uint id, std::vector<uint8_t>& packet*/) const;
+  bool listen(unsigned short int&) const;
 	void start();
 	virtual ~ConnectionManager();
 };

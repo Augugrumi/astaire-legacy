@@ -1,8 +1,5 @@
 #include "tuntap++.h"
 
-#include <iostream>
-#include <string>
-#include <algorithm>
 
 namespace tuntap {
 
@@ -83,18 +80,50 @@ tun::nonblocking(bool b)
     tuntap_set_nonblocking(_dev, int(b));
 }
 
-  void tun::read() {
-    BOOST_LOG_TRIVIAL(trace) << "Reading package...";
-    uint8_t* buff = new uint8_t[this->mtu()];
-    if (tuntap_read(_dev, buff, sizeof(*buff)*2048) > 0) {
-      BOOST_LOG_TRIVIAL(trace) << "SUCCESS READING";
-      for (int i = 0; i < mtu(); i++) {
-        if (buff[i] != 0) {
-          BOOST_LOG_TRIVIAL(trace) << buff[i];
-        }
-      }
-    } else {
-      BOOST_LOG_TRIVIAL(fatal) << "Failure reading the package";
+  void tun::read_from_socket(unsigned short int port) const {
+    BOOST_LOG_TRIVIAL(trace) << "Initialize reading packages from socket on port: " << port;
+
+    int sock_fd, net_fd, optval = 1; // Socket file descriptor
+    struct sockaddr_in physical, remote;
+    socklen_t remotelen;
+
+    if ((sock_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+      BOOST_LOG_TRIVIAL(fatal) << "Failure while opening the socket";
+      exit(1);
+    }
+
+    if(setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, (char *)&optval, sizeof(optval)) < 0) {
+      BOOST_LOG_TRIVIAL(fatal) << "Failure while setting socket options...";
+      exit(1);
+    }
+
+    memset(&physical, 0, sizeof(physical));
+    physical.sin_family = AF_INET;
+    physical.sin_addr.s_addr = htonl(INADDR_ANY);
+    physical.sin_port = htons(port);
+
+    if (bind(sock_fd, (struct sockaddr*) &physical, sizeof(physical)) < 0) {
+      BOOST_LOG_TRIVIAL(fatal) << "Failure binding socket with port: " << inet_ntoa(remote.sin_addr);
+      exit(1);
+    }
+
+    if (listen(sock_fd, 5) < 0) {
+      BOOST_LOG_TRIVIAL(fatal) << "Failure listening to binded port";
+      exit(1);
+    }
+
+    /* wait for connection request */
+    remotelen = sizeof(remote);
+    memset(&remote, 0, remotelen);
+    if ((net_fd = accept(sock_fd, (struct sockaddr*)&remote, &remotelen)) < 0) {
+      BOOST_LOG_TRIVIAL(fatal) << "Failure accepting incoming connection";
+      exit(1);
+    }
+
+    BOOST_LOG_TRIVIAL(info) << "Connection established with " << inet_ntoa(remote.sin_addr);
+
+    while(true) {
+      
     }
   }
 

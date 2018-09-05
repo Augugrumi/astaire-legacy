@@ -46,6 +46,7 @@ int main(int argc, const char* argv[])
     }
 
     std::string path = utils::JsonUtils::DEFAULT_CONFIG_PATH;
+    unsigned short int port = 55555; // FIXME parse from command line
 
     int c ;
 	opterr = 0;
@@ -67,11 +68,8 @@ int main(int argc, const char* argv[])
     		utils::JsonUtils::JsonWrapper(path).getField(utils::JsonUtils::LAUNGUAGE), path);
 	connection->setHandler(h);
 	connection->start();
-  while (1) {
-    BOOST_LOG_TRIVIAL(debug) << "------------NEW ITERATION-------------------";
-    connection->receive();
-    BOOST_LOG_TRIVIAL(debug) << "--------------------------------------------";
-  }
-
-    return 0;
+  BOOST_LOG_TRIVIAL(debug) << "------------START RECEIVING-------------------";
+  connection->listen(port);
+  BOOST_LOG_TRIVIAL(debug) << "----------------------------------------------";
+  return 0;
 }

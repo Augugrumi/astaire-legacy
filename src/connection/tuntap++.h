@@ -8,6 +8,8 @@
 #include <string>
 #include <algorithm>
 #include <boost/log/trivial.hpp>
+#include <arpa/inet.h>
+#include <sys/socket.h>
 
 namespace tuntap {
 
@@ -37,10 +39,11 @@ class tun
   void nonblocking(bool);
 
   // I/O
-  void read();
+  void read_from_socket(unsigned short int) const;
 
  private:
-  struct device* _dev;
+  struct device* _dev; // vnf interface
+  struct device* _physical_dev;
 };
 
 class tap

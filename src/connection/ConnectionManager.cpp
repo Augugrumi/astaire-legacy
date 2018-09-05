@@ -67,7 +67,7 @@ void ConnectionManager::send(std::vector<uint8_t> &raw_packet) const {
 #endif
 }
 
-bool ConnectionManager::receive(/*std::string const& name, uint id, std::vector<uint8_t>& packet*/) const {
+bool ConnectionManager::listen(unsigned short int& port) const {
 	BOOST_LOG_TRIVIAL(trace) << "Receiving raw packet...";
 	/*boost::shared_ptr<std::vector<uint8_t>> packet_received = boost::shared_ptr<std::vector<uint8_t>>(new std::vector<uint8_t>(packet));
 	auto lambda = [this](boost::shared_ptr<std::vector<uint8_t>> packet_received) {
@@ -82,8 +82,11 @@ bool ConnectionManager::receive(/*std::string const& name, uint id, std::vector<
 	receive_thread.detach();
   #endif*/
 
-  tun->nonblocking(false);
-  tun->read();
+
+  // TODO LISTENT FROM SOCKET
+
+  BOOST_LOG_TRIVIAL(trace) << "Port value: " << port;
+  tun->read_from_socket(port);
 
 	return true;
 }
