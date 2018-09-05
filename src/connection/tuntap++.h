@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <boost/log/trivial.hpp>
 
 namespace tuntap {
 
@@ -34,6 +35,10 @@ class tun
   // System
   void release();
   void nonblocking(bool);
+
+  // I/O
+  void read();
+
  private:
   struct device* _dev;
 };

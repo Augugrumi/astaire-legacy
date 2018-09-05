@@ -45,10 +45,10 @@ void ConnectionManager::start() {
 	BOOST_LOG_TRIVIAL(debug) << "ConnectionManager has started";
 
   tun->up();
-
+  /*
   while(1) {
     std::this_thread::sleep_for(std::chrono::seconds(5));
-  }
+    }*/
 }
 
 void ConnectionManager::send(std::vector<uint8_t> &raw_packet) const {
@@ -67,9 +67,9 @@ void ConnectionManager::send(std::vector<uint8_t> &raw_packet) const {
 #endif
 }
 
-bool ConnectionManager::receive(std::string const& name, uint id, std::vector<uint8_t>& packet) const {
+bool ConnectionManager::receive(/*std::string const& name, uint id, std::vector<uint8_t>& packet*/) const {
 	BOOST_LOG_TRIVIAL(trace) << "Receiving raw packet...";
-	boost::shared_ptr<std::vector<uint8_t>> packet_received = boost::shared_ptr<std::vector<uint8_t>>(new std::vector<uint8_t>(packet));
+	/*boost::shared_ptr<std::vector<uint8_t>> packet_received = boost::shared_ptr<std::vector<uint8_t>>(new std::vector<uint8_t>(packet));
 	auto lambda = [this](boost::shared_ptr<std::vector<uint8_t>> packet_received) {
 		BOOST_LOG_TRIVIAL(trace) << "Receiving packet in a new thread";
 		this->handler->handleMessage(packet_received);
@@ -80,7 +80,11 @@ bool ConnectionManager::receive(std::string const& name, uint id, std::vector<ui
 #else
 	boost::thread receive_thread(lambda, packet_received);
 	receive_thread.detach();
-#endif
+  #endif*/
+
+  tun->nonblocking(false);
+  tun->read();
+
 	return true;
 }
 

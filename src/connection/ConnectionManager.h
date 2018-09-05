@@ -41,12 +41,12 @@ private:
 #if BOOST_VERSION >= 106600
 	boost::shared_ptr<boost::asio::thread_pool> t_pool;
 #endif
-	bool receive(std::string const& name, uint id, std::vector<uint8_t>& packet) const;
 
 public:
 	ConnectionManager(const std::string&, const std::string&, int);
 	void setHandler(handler::Handler* handler);
 	void send(std::vector<uint8_t> &) const;
+  bool receive(/*std::string const& name, uint id, std::vector<uint8_t>& packet*/) const;
 	void start();
 	virtual ~ConnectionManager();
 };

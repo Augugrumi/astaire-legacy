@@ -67,6 +67,11 @@ int main(int argc, const char* argv[])
     		utils::JsonUtils::JsonWrapper(path).getField(utils::JsonUtils::LAUNGUAGE), path);
 	connection->setHandler(h);
 	connection->start();
+  while (1) {
+    BOOST_LOG_TRIVIAL(debug) << "------------NEW ITERATION-------------------";
+    connection->receive();
+    BOOST_LOG_TRIVIAL(debug) << "--------------------------------------------";
+  }
 
     return 0;
 }

@@ -83,6 +83,21 @@ tun::nonblocking(bool b)
     tuntap_set_nonblocking(_dev, int(b));
 }
 
+  void tun::read() {
+    BOOST_LOG_TRIVIAL(trace) << "Reading package...";
+    uint8_t* buff = new uint8_t[this->mtu()];
+    if (tuntap_read(_dev, buff, sizeof(*buff)*2048) > 0) {
+      BOOST_LOG_TRIVIAL(trace) << "SUCCESS READING";
+      for (int i = 0; i < mtu(); i++) {
+        if (buff[i] != 0) {
+          BOOST_LOG_TRIVIAL(trace) << buff[i];
+        }
+      }
+    } else {
+      BOOST_LOG_TRIVIAL(fatal) << "Failure reading the package";
+    }
+  }
+
 tap::tap()
     : _dev{tuntap_init()}
 {
