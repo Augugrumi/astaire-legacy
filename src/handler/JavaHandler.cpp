@@ -92,11 +92,10 @@ uint8_t* JavaHandler::execute_java(const std::string& class_file_path,
 
 void JavaHandler::handleMessage(boost::shared_ptr<std::vector<uint8_t>> packet) const {
 	uint8_t* pkt = packet->data();
-	int pkt_size = sizeof(pkt)/sizeof(*pkt);
 	pkt = execute_java(config->getField(utils::JsonUtils::FILE_PATH),
 			config->getField(utils::JsonUtils::CLASS_NAME),
 			config->getField(utils::JsonUtils::METHOD),
-			pkt, pkt_size);
+			pkt, packet->size());
 }
 
 } /* namespace connectionmanager */

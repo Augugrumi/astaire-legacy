@@ -1,7 +1,7 @@
 #pragma once
 #ifndef LIBTUNTAP_ALY0MA60
 #define LIBTUNTAP_ALY0MA60
-
+/*
 #include <string>
 #include <tuntap.h>
 #include <iostream>
@@ -82,6 +82,5 @@ class tap
 };
 
 } /* tuntap */
-
 
 #endif /* end of include guard: LIBTUNTAP_ALY0MA60 */

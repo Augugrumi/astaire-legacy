@@ -14,7 +14,7 @@ namespace connection {
                                        int net_mask) : tun(), handler() {
 
   BOOST_LOG_TRIVIAL(debug) << "Setting up tun connection...";
-  tun = boost::shared_ptr<tuntap::tun>(new tuntap::tun());
+  tun = boost::shared_ptr<connection::Tunnel>(new connection::Tunnel());
   BOOST_LOG_TRIVIAL(debug) << "Setting up tuntap with interface name: " << ifname;
   tun->name(ifname);
   tun->ip(ip_address, net_mask);

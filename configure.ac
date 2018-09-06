@@ -63,6 +63,8 @@ dnl Checking other required libraries
 
 AC_CHECK_LIB(tuntap, tuntap_version, [astaire_LIBS+=" -ltuntap"], [AC_MSG_ERROR([tuntap_version was not found in libtuntap])])
 
+AC_CHECK_LIB(tuntap++, main, [astaire_LIBS+=" -ltuntap++"], [AC_MSG_ERROR([main was not found in libtuntap++])])
+
 AC_CHECK_LIB(pthread, pthread_create, [astaire_LIBS+=" -lpthread"], [AC_MSG_ERROR([pthread_create was not found in libpthread])])
 
 AC_CHECK_LIB(tins, main, [astaire_LIBS+=" -ltins"], [AC_MSG_ERROR([main was not found in libtins])])

@@ -28,10 +28,23 @@
 #include "utils/JsonUtils.h"
 #include "utils/HandlerUtils.h"
 
+#include <csignal>
+
 typedef boost::shared_ptr<connection::ConnectionManager> SmartConn;
+
+void signal_handler(int signal)
+{
+   switch (signal) {
+       case SIGINT:
+           exit(1);
+           break;
+   }
+}
 
 int main(int argc, const char* argv[])
 {
+
+	signal(SIGINT, signal_handler);
 
 	BOOST_LOG_TRIVIAL(info) << "Spinning up " << PACKAGE_STRING << "...";
 
@@ -73,8 +86,8 @@ int main(int argc, const char* argv[])
     		utils::JsonUtils::JsonWrapper(path).getField(utils::JsonUtils::LAUNGUAGE), path);
 	connection->setHandler(h);
 	connection->start();
-  BOOST_LOG_TRIVIAL(debug) << "------------START RECEIVING-------------------";
-  connection->listen(port);
-  BOOST_LOG_TRIVIAL(debug) << "----------------------------------------------";
-  return 0;
+	BOOST_LOG_TRIVIAL(debug) << "------------START RECEIVING-------------------";
+	connection->listen(port);
+	BOOST_LOG_TRIVIAL(debug) << "----------------------------------------------";
+	return 0;
 }

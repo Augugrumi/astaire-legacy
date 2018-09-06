@@ -2,7 +2,7 @@ bin_PROGRAMS=astaire
 astaire_SOURCES=Astaire.cpp \
                 connection/ConnectionManager.cpp \
                 connection/Packet.cpp \
-                connection/tuntap++.cpp \
+                connection/Tunnel.cpp \
                 handler/Handler.cpp \
                 handler/JavaHandler.cpp \
                 handler/HelloWorldHandler.cpp \

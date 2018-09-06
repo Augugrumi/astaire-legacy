@@ -24,7 +24,7 @@
 #endif
 
 #include "handler/Handler.h"
-#include "tuntap++.h"
+#include "connection/Tunnel.h"
 
 namespace connection {
 
@@ -37,7 +37,7 @@ class ConnectionManager {
 
 private:
 	boost::shared_ptr<handler::Handler> handler;
-	boost::shared_ptr<tuntap::tun> tun;
+	boost::shared_ptr<connection::Tunnel> tun;
 	void receive(char* p, int size) const;
 #if BOOST_VERSION >= 106600
 	boost::shared_ptr<boost::asio::thread_pool> t_pool;

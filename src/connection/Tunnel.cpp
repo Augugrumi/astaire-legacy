@@ -1,65 +1,69 @@
-#include "tuntap++.h"
 /*
-namespace tuntap {
+ * Tunnel.cpp
+ *
+ *  Created on: Sep 6, 2018
+ *      Author: zanna
+ */
 
-tun::tun() : _dev { tuntap_init() }, _physical_dev(0) {
-	tuntap_start(_dev, TUNTAP_MODE_TUNNEL, TUNTAP_ID_ANY);
+#include "Tunnel.h"
+
+namespace connection {
+
+Tunnel::Tunnel() {
+	// TODO Auto-generated constructor stub
+
 }
 
-tun::~tun() {
-	tuntap_destroy(_dev);
+Tunnel::~Tunnel() {
+	// TODO Auto-generated destructor stub
 }
 
-tun::tun(tun &&t) : _dev(nullptr), _physical_dev(0) {
-	std::swap(t._dev, this->_dev);
+
+int Tunnel::cread(int fd, char *buf, int n) const {
+
+  int nread;
+
+  if((nread=read(fd, buf, n)) < 0){
+    perror("Reading data");
+    exit(1);
+  }
+  return nread;
 }
 
-void tun::release() {
-	tuntap_release(_dev);
+int Tunnel::read_n(int fd, char *buf, int n) const {
+
+  int nread, left = n;
+
+  while(left > 0) {
+	BOOST_LOG_TRIVIAL(trace) << "read_n::nread: " << nread;
+    if ((nread = cread(fd, buf, left)) == 0){
+      return 0 ;
+    }else {
+      left -= nread;
+      buf += nread;
+    }
+  }
+  return n;
 }
 
-std::string tun::name() const {
-	return tuntap_get_ifname(_dev);
+int Tunnel::cwrite(int fd, char *buf, int n) const {
+
+  int nwrite;
+
+  if((nwrite=write(fd, buf, n)) < 0){
+	  BOOST_LOG_TRIVIAL(fatal) << "Failure on data writing";
+    exit(1);
+  }
+  return nwrite;
 }
 
-void tun::name(std::string const &s) {
-	tuntap_set_ifname(_dev, s.c_str());
-}
-
-t_tun tun::native_handle() const {
-	return TUNTAP_GET_FD(this->_dev);
-}
-
-void tun::up() {
-	tuntap_up(_dev);
-}
-
-void tun::down() {
-	tuntap_down(_dev);
-}
-
-int tun::mtu() const {
-	return tuntap_get_mtu(_dev);
-}
-
-void tun::mtu(int m) {
-	tuntap_set_mtu(_dev, m);
-}
-
-void tun::ip(std::string const &s, int netmask) {
-	tuntap_set_ip(_dev, s.c_str(), netmask);
-}
-
-void tun::nonblocking(bool b) {
-	tuntap_set_nonblocking(_dev, int(b));
-}
-
-void tun::read_from_socket(unsigned short int port, std::function<void (char*, int)> callback) const {
+void Tunnel::read_from_socket(unsigned short int port, std::function<void (char*, int)> callback) const {
 	BOOST_LOG_TRIVIAL(trace)<< "Initialize reading packages from socket on port: " << port;
 
 	int sock_fd, net_fd, optval = 1; // Socket file descriptor
 	struct sockaddr_in physical, remote;
 	socklen_t remotelen;
+	int tun_fd = native_handle();
 
 	if ((sock_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		BOOST_LOG_TRIVIAL(fatal) << "Failure while opening the socket";
@@ -87,7 +91,7 @@ void tun::read_from_socket(unsigned short int port, std::function<void (char*, i
 	}
 
 	/* wait for connection request */
-	/*remotelen = sizeof(remote);
+	remotelen = sizeof(remote);
 
 	while(1) {
 		memset(&remote, 0, remotelen);
@@ -99,9 +103,9 @@ void tun::read_from_socket(unsigned short int port, std::function<void (char*, i
 		BOOST_LOG_TRIVIAL(info) << "Connection established with " << inet_ntoa(remote.sin_addr);
 
 		// TODO check if mapping tap_fd(simpletun.c) - _dev->tun_fd is correct
-		int maxfd = (_dev->tun_fd > net_fd)?_dev-> tun_fd : net_fd;
+		int maxfd = (tun_fd > net_fd)? tun_fd : net_fd;
 
-		BOOST_LOG_TRIVIAL(info) << "maxfd:" << maxfd << " _dev: " << _dev->tun_fd << " net: " << net_fd;
+		BOOST_LOG_TRIVIAL(trace) << "maxfd:" << maxfd << " _dev: " << tun_fd << " net: " << net_fd;
 
 		while(true) {
 			int ret;
@@ -113,7 +117,7 @@ void tun::read_from_socket(unsigned short int port, std::function<void (char*, i
 			BOOST_LOG_TRIVIAL(info) << " after initialization";
 
 			FD_ZERO(&rd_set);
-			FD_SET(_dev->tun_fd, &rd_set); FD_SET(net_fd, &rd_set);
+			FD_SET(tun_fd, &rd_set); FD_SET(net_fd, &rd_set);
 
 			BOOST_LOG_TRIVIAL(info) << " after FD_SET";
 
@@ -130,10 +134,10 @@ void tun::read_from_socket(unsigned short int port, std::function<void (char*, i
 				exit(1);
 			}
 
-			if(FD_ISSET(_dev->tun_fd, &rd_set)) {
+			if(FD_ISSET(tun_fd, &rd_set)) {
 				BOOST_LOG_TRIVIAL(debug) << "Reading data from buffer...";
 
-				nread = cread(_dev->tun_fd, buffer, mtu());
+				nread = cread(tun_fd, buffer, mtu());
 
 				// write length + packet
 				plength = htons(nread);
@@ -159,7 +163,7 @@ void tun::read_from_socket(unsigned short int port, std::function<void (char*, i
 
 				BOOST_LOG_TRIVIAL(debug) << "nread:" << nread << " sizeof: " << sizeof(buffer)/sizeof(*buffer);
 
-				callback(buffer, nread);
+				callback(buffer, nread+2);
 
 				//nwrite = cwrite(net_fd, buffer, nread);
 				BOOST_LOG_TRIVIAL(debug) << "4";
@@ -169,66 +173,4 @@ void tun::read_from_socket(unsigned short int port, std::function<void (char*, i
 	}
 }
 
-tap::tap() :
-		_dev { tuntap_init() } {
-	tuntap_start(_dev, TUNTAP_MODE_ETHERNET, TUNTAP_ID_ANY);
-}
-
-tap::~tap() {
-	tuntap_destroy(_dev);
-}
-
-tap::tap(tap &&t) :
-		_dev(nullptr) {
-	std::swap(t._dev, this->_dev);
-}
-
-void tap::release() {
-	tuntap_release(_dev);
-}
-
-std::string tap::name() const {
-	return tuntap_get_ifname(_dev);
-}
-
-void tap::name(std::string const &s) {
-	tuntap_set_ifname(_dev, s.c_str());
-}
-
-std::string tap::hwaddr() const {
-	return tuntap_get_hwaddr(_dev);
-}
-
-void tap::hwaddr(std::string const &s) {
-	tuntap_set_hwaddr(_dev, s.c_str());
-}
-
-t_tun tap::native_handle() const {
-	return TUNTAP_GET_FD(this->_dev);
-}
-
-void tap::up() {
-	tuntap_up(_dev);
-}
-
-void tap::down() {
-	tuntap_down(_dev);
-}
-
-int tap::mtu() const {
-	return tuntap_get_mtu(_dev);
-}
-
-void tap::mtu(int m) {
-	tuntap_set_mtu(_dev, m);
-}
-
-void tap::ip(std::string const &s, int netmask) {
-	tuntap_set_ip(_dev, s.c_str(), netmask);
-}
-
-void tap::nonblocking(bool b) {
-	tuntap_set_nonblocking(_dev, int(b));
-}
-*/
-} /* tuntap */
+} /* namespace connection */
