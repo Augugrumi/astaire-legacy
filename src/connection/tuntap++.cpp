@@ -54,7 +54,48 @@ void tun::nonblocking(bool b) {
 	tuntap_set_nonblocking(_dev, int(b));
 }
 
-void tun::read_from_socket(unsigned short int port) const {
+// TODO move to a better place
+//******************************************************
+int cread(int fd, char *buf, int n){
+
+  int nread;
+
+  if((nread=read(fd, buf, n)) < 0){
+    perror("Reading data");
+    exit(1);
+  }
+  return nread;
+}
+
+int read_n(int fd, char *buf, int n) {
+
+  int nread, left = n;
+
+  while(left > 0) {
+	BOOST_LOG_TRIVIAL(fatal) << "read_n::nread: " << nread;
+    if ((nread = cread(fd, buf, left)) == 0){
+      return 0 ;
+    }else {
+      left -= nread;
+      buf += nread;
+    }
+  }
+  return n;
+}
+
+int cwrite(int fd, char *buf, int n){
+
+  int nwrite;
+
+  if((nwrite=write(fd, buf, n)) < 0){
+	  BOOST_LOG_TRIVIAL(fatal) << "Failure on data writing";
+    exit(1);
+  }
+  return nwrite;
+}
+//******************************************************
+
+void tun::read_from_socket(unsigned short int port, std::function<void (char*, int)> callback) const {
 	BOOST_LOG_TRIVIAL(trace)<< "Initialize reading packages from socket on port: " << port;
 
 	int sock_fd, net_fd, optval = 1; // Socket file descriptor
@@ -88,16 +129,84 @@ void tun::read_from_socket(unsigned short int port) const {
 
 	/* wait for connection request */
 	remotelen = sizeof(remote);
-	memset(&remote, 0, remotelen);
-	if ((net_fd = accept(sock_fd, (struct sockaddr*)&remote, &remotelen)) < 0) {
-		BOOST_LOG_TRIVIAL(fatal) << "Failure accepting incoming connection";
-		exit(1);
-	}
 
-	BOOST_LOG_TRIVIAL(info) << "Connection established with " << inet_ntoa(remote.sin_addr);
+	while(1) {
+		memset(&remote, 0, remotelen);
+		if ((net_fd = accept(sock_fd, (struct sockaddr*)&remote, &remotelen)) < 0) {
+			BOOST_LOG_TRIVIAL(fatal) << "Failure accepting incoming connection";
+			exit(1);
+		}
 
-	while(true) {
+		BOOST_LOG_TRIVIAL(info) << "Connection established with " << inet_ntoa(remote.sin_addr);
 
+		// TODO check if mapping tap_fd(simpletun.c) - _dev->tun_fd is correct
+		int maxfd = (_dev->tun_fd > net_fd)?_dev-> tun_fd : net_fd;
+
+		BOOST_LOG_TRIVIAL(info) << "maxfd:" << maxfd << " _dev: " << _dev->tun_fd << " net: " << net_fd;
+
+		while(true) {
+			int ret;
+			fd_set rd_set;
+			int nread, nwrite;
+			char buffer[mtu()];
+			uint16_t plength;
+
+			BOOST_LOG_TRIVIAL(info) << " after initialization";
+
+			FD_ZERO(&rd_set);
+			FD_SET(_dev->tun_fd, &rd_set); FD_SET(net_fd, &rd_set);
+
+			BOOST_LOG_TRIVIAL(info) << " after FD_SET";
+
+			ret = select(maxfd + 1, &rd_set, NULL, NULL, NULL);
+
+			BOOST_LOG_TRIVIAL(info) << " select";
+
+			if (ret < 0 && errno == EINTR){
+			  continue;
+			}
+
+			if (ret < 0) {
+				BOOST_LOG_TRIVIAL(fatal) << "Failure on select.";
+				exit(1);
+			}
+
+			if(FD_ISSET(_dev->tun_fd, &rd_set)) {
+				BOOST_LOG_TRIVIAL(debug) << "Reading data from buffer...";
+
+				nread = cread(_dev->tun_fd, buffer, mtu());
+
+				// write length + packet
+				plength = htons(nread);
+				nwrite = cwrite(net_fd, (char *)&plength, sizeof(plength));
+				nwrite = cwrite(net_fd, buffer, nread);
+
+			}
+
+			if(FD_ISSET(net_fd, &rd_set)) {
+				BOOST_LOG_TRIVIAL(debug) << "Reading data from network...";
+
+				nread = read_n(net_fd, (char *)&plength, sizeof(plength));
+
+				BOOST_LOG_TRIVIAL(debug) << "nread:" << nread;
+
+				if(nread == 0){
+					BOOST_LOG_TRIVIAL(debug) << "No data from network.";
+					break;
+				}
+
+				nread = recv(net_fd, buffer, mtu(), 0);
+				BOOST_LOG_TRIVIAL(debug) << "data:" << buffer;
+
+				BOOST_LOG_TRIVIAL(debug) << "nread:" << nread << " sizeof: " << sizeof(buffer)/sizeof(*buffer);
+
+				callback(buffer, nread);
+
+				//nwrite = cwrite(net_fd, buffer, nread);
+				BOOST_LOG_TRIVIAL(debug) << "4";
+			}
+
+		}
 	}
 }
 

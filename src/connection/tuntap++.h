@@ -11,6 +11,10 @@
 #include <boost/log/trivial.hpp>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include <sys/select.h>
+#include <functional>
+#include <errno.h>
+#include <unistd.h>
 
 namespace tuntap {
 
@@ -40,7 +44,7 @@ class tun
   void nonblocking(bool);
 
   // I/O
-  void read_from_socket(unsigned short int) const;
+  void read_from_socket(unsigned short int, std::function<void(char*, int)>) const;
 
  private:
   struct device* _dev; // vnf interface

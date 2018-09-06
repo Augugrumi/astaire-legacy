@@ -37,16 +37,17 @@ class ConnectionManager {
 
 private:
 	boost::shared_ptr<handler::Handler> handler;
-  boost::shared_ptr<tuntap::tun> tun;
+	boost::shared_ptr<tuntap::tun> tun;
+	void receive(char* p, int size) const;
 #if BOOST_VERSION >= 106600
 	boost::shared_ptr<boost::asio::thread_pool> t_pool;
 #endif
 
 public:
 	ConnectionManager(const std::string&, const std::string&, int);
-	void setHandler(handler::Handler* handler);
+    void setHandler(handler::Handler* handler);
 	void send(std::vector<uint8_t> &) const;
-  bool listen(unsigned short int&) const;
+    bool listen(unsigned short int&) const;
 	void start();
 	virtual ~ConnectionManager();
 };

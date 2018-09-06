@@ -75,20 +75,42 @@ bool ConnectionManager::listen(unsigned short int& port) const {
 		this->handler->handleMessage(packet_received);
 	};
 
+	#if BOOST_VERSION >= 106600
+	boost::asio::post(*t_pool, boost::bind<void>(lambda, packet_received));
+	#else
+	boost::thread receive_thread(lambda, packet_received);
+	receive_thread.detach();
+	#endif*/
+
+
+	// TODO LISTENT FROM SOCKET
+
+	BOOST_LOG_TRIVIAL(trace) << "Port value: " << port;
+
+	tun->read_from_socket(port, std::bind(&ConnectionManager::receive, this, std::placeholders::_1, std::placeholders::_2));
+
+	tun->nonblocking(true);
+
+	return true;
+}
+
+void ConnectionManager::receive(char* p, int size) const {
+	boost::shared_ptr<std::vector<uint8_t>> packet_received =
+			boost::shared_ptr<std::vector<uint8_t>>(new std::vector<uint8_t>(p, p + size));
+	auto lambda = [this](boost::shared_ptr<std::vector<uint8_t>> packet_received) {
+		BOOST_LOG_TRIVIAL(trace) << "Receiving packet in a new thread";
+		this->handler->handleMessage(packet_received);
+		//TODO call send
+	};
+
 #if BOOST_VERSION >= 106600
 	boost::asio::post(*t_pool, boost::bind<void>(lambda, packet_received));
 #else
 	boost::thread receive_thread(lambda, packet_received);
 	receive_thread.detach();
-  #endif*/
+#endif
 
 
-  // TODO LISTENT FROM SOCKET
-
-  BOOST_LOG_TRIVIAL(trace) << "Port value: " << port;
-  tun->read_from_socket(port);
-
-	return true;
 }
 
 } /* namespace connectionmanager */
