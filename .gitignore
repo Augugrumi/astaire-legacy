@@ -67,3 +67,4 @@ local.properties
 .loadpath
 .recommenders
 .directory
+.autotools
