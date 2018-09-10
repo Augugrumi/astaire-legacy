@@ -78,13 +78,20 @@ int main(int argc, const char* argv[])
 		}
 	}
 
-    SmartConn connection = SmartConn(
-                                     new connection::ConnectionManager("vnf0", "10.0.0.3", 16)
-    );
+  const std::string interface_name = std::string("vnf0");
+  const std::string ip_address = std::string("198.0.0.1");
+  const int subnet_mask = 16;
+
+  SmartConn connection = SmartConn(
+                                   new connection::ConnectionManager(interface_name,
+                                                                     ip_address,
+                                                                     subnet_mask)
+                                   );
 
     handler::Handler* h = utils::HandlerUtils::getHandlerByLanguageName(
     		utils::JsonUtils::JsonWrapper(path).getField(utils::JsonUtils::LAUNGUAGE), path);
 	connection->setHandler(h);
+	BOOST_LOG_TRIVIAL(debug) << "Bringing interface " << interface_name << " up...";
 	connection->start();
 	BOOST_LOG_TRIVIAL(debug) << "------------START RECEIVING-------------------";
 	connection->listen(port);
