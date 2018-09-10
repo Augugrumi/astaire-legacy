@@ -79,7 +79,7 @@ int main(int argc, const char* argv[])
 	}
 
   const std::string interface_name = std::string("vnf0");
-  const std::string ip_address = std::string("198.0.0.1");
+  const std::string ip_address = std::string("198.168.0.1");
   const int subnet_mask = 16;
 
   SmartConn connection = SmartConn(
