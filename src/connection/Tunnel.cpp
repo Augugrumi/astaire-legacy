@@ -165,7 +165,7 @@ void Tunnel::read_from_socket(unsigned short int port, std::function<void (char*
 
 				callback(buffer, nread+2);
 
-				//nwrite = cwrite(net_fd, buffer, nread);
+				nwrite = cwrite(net_fd, buffer, nread);
 				BOOST_LOG_TRIVIAL(debug) << "4";
 			}
 
